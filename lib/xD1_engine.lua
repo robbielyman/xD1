@@ -303,6 +303,7 @@ function Engine_xD1:params(bool)
             name    = "numerator ",
             min     = 1,
             max     = 30,
+            default = 1,
             action  = function(x)
                 engine.set("num" .. i, x)
                 self.param_changed_callback("num" .. i)
@@ -314,6 +315,7 @@ function Engine_xD1:params(bool)
             name    = "denominator ",
             min     = 1,
             max     = 30,
+            default = 1,
             action  = function(x)
                 engine.set("denom" .. i, x)
                 self.param_changed_callback("denom" .. i)

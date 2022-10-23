@@ -39,7 +39,7 @@ Engine_xD1 : CroneEngine{
     pedalSustainNotes = Dictionary.new;
     pedalSostenutoNotes = Dictionary.new;
 
-    32.do({ arg i; SynthDef("xD1_"++i, {
+    32.do({ arg i; SynthDef(("xD1_"++i).asString, {
         arg out, note=69, amp=0.5, gate=0,
         num1=1, num2=1, num3=1, num4=1, num5=1, num6=1,
         denom1=1, denom2=1, denom3=1, denom4=1, denom5=1, denom6=1,
@@ -54,7 +54,7 @@ Engine_xD1 : CroneEngine{
         lfreq=1, lfade=0, lfo_am=0, lfo_pm=0, lfo_hfm=0, lfo_lfm=0, feedback=0;
 
         var maxrel = ArrayMax.kr([orel1, orel2, orel3, orel4, orel5, orel6])[0];
-        var menv = Env.asr(0, 1, maxrel).kr(2, gate);
+        var menv = Env.asr(0, 1, maxrel + 1).kr(2, gate);
         var fenv = Env.adsr(fatk, fdec, fsus, frel, 1, fcurve).kr(0, gate);
         var penv = Env.adsr(patk, pdec, psus, prel, pamt, pcurve).kr(0, gate);
         var oenv1 = Env.adsr(oatk1, odec1, osus1, orel1, oamt1, ocurve).kr(0, gate);
@@ -111,9 +111,10 @@ Engine_xD1 : CroneEngine{
 
     fnNoteOnPoly = {
       arg note, amp, duration;
+      var synthdef = "xD1_" ++ xParameters.at("alg").asInteger;
 
       xVoices.put(note,
-        Synth.new("xD1_" ++ xParameters.at("alg"), [
+        Synth.new(synthdef.asString, [
           \out, context.out_b,
           \note, note,
           \amp, amp*xParameters.at("amp"),
