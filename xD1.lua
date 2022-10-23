@@ -6,7 +6,7 @@
 -- @alanza
 -- v0.1
 
-local xD1 = include("lib/xD1_engine")
+xD1 = include("lib/xD1_engine")
 UI = require("ui")
 Filtergraph = require("filtergraph")
 Envgraph = require("envgraph")

@@ -40,7 +40,7 @@ Engine_xD1 : CroneEngine{
     pedalSostenutoNotes = Dictionary.new;
 
     32.do({ arg i; SynthDef(("xD1_"++i).asString, {
-        arg out, note=69, amp=0.5, gate=0,
+        arg note=69, amp=0.5, gate=0,
         num1=1, num2=1, num3=1, num4=1, num5=1, num6=1,
         denom1=1, denom2=1, denom3=1, denom4=1, denom5=1, denom6=1,
         hirat=0.125, lorat=8, hires=0, lores=0,
@@ -79,7 +79,7 @@ Engine_xD1 : CroneEngine{
         var snd = FM7.arAlgo(i, ctls, feedback);
         snd = SVF.ar(snd, hifreq, hires, lowpass:0, highpass:1);
         snd = SVF.ar(snd, lofreq, lores);
-        Out.ar(out, (snd * amp).dup);
+        Out.ar(context.out_b, (snd * amp).dup);
       }).add;
     });
 
@@ -119,8 +119,7 @@ Engine_xD1 : CroneEngine{
       });
 
       xVoices.put(note,
-        Synth.new(def, [
-          \out, context.out_b,
+        Synth.new("xD1_0", [
           \note, note,
           \amp, amp*xParameters.at("amp"),
           \gate, 1,
