@@ -33,6 +33,7 @@ function Engine_xD1:params(bool)
         name    = "max polyphony",
         min     = 1,
         max     = 20,
+        default = 20,
         action  = function(x)
             engine.set_polyphony(x)
             self.param_changed_callback("max_polyphony")

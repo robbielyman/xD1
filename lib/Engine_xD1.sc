@@ -113,7 +113,7 @@ Engine_xD1 : CroneEngine{
       arg note, amp, duration;
 
       xVoices.put(note,
-        Synth.new("xD1_" ++ xParameters.at("alg").asString,[
+        Synth.new("xD1_" ++ xParameters.at("alg"), [
           \out, context.out_b,
           \note, note,
           \amp, amp*xParameters.at("amp"),
