@@ -20,24 +20,17 @@ function init()
 
     -- pages
     local ophook = function(self)
-        self.lists[1].index = util.clamp(self.index - 4, 1, 4)
-        self.lists[1].active = self.index > 4
-        self.lists[2].index = util.clamp(self.index - 4, 1, 4)
-        for j = 1,4 do
+        self.lists[1].index = self.index
+        self.lists[1].num_above_selected = 0
+        self.lists[2].index = self.index
+        for j = 1,8 do
             self.lists[2].entries[j] = params:get(self.params[j + 4])
         end
+        self.lists[2].num_above_selected = 0
         self.lists[2].text_align = "right"
-        self.lists[2].active = self.index > 4
         self.env_graph:edit_adsr(params:get(self.params[1]), params:get(self.params[2]),
         params:get(self.params[3]), params:get(self.params[4]))
         self.env_graph:redraw()
-        local adsr = {"A", "D", "S", "R"}
-        for i = 1,4 do
-            if self.index == i then screen.level(15) else screen.level(3) end
-            screen.move(4, 27 + 11 * (i - 1))
-            screen.text(adsr[i] .. " " .. params:string(self.params[i]))
-        end
-        screen.fill()
     end
     local titles = {}
     local tabs = {}
@@ -46,8 +39,8 @@ function init()
         tabs[i] = Tab.new(
         { "oatk"..i, "odec"..i, "osus"..i, "orel"..i, "num"..i, "denom"..i, "oamp"..i, "ocurve"},
         {
-            UI.List.new(70, 24, 1, {"num", "denom", "index", "curve"}),
-            UI.List.new(120, 24)
+            UI.ScrollingList.new(70, 24, 1, {"atk", "dec", "sus", "rel", "num", "denom", "index", "curve"}),
+            UI.ScrollingList.new(120, 24)
         },
         ophook
         )
@@ -62,30 +55,21 @@ function init()
     {
         Tab.new({"fatk", "fdec", "fsus", "frel", "hirat", "lorat", "hfamt", "lfamt", "fcurve"},
         {
-            UI.ScrollingList.new(70, 24, 1, {"high", "low", "env > hi", "env > low", "curve"}),
+            UI.ScrollingList.new(70, 24, 1, {"atk", "dec", "sus", "rel", "high", "low", "env > hi", "env > low", "curve"}),
             UI.ScrollingList.new(120, 24)
         },
         function(self)
-            self.lists[1].index = util.clamp(self.index - 4, 1, 5)
-            self.lists[1].active = self.index > 4
+            self.lists[1].index = self.index
             self.lists[1].num_above_selected = 0
-            self.lists[2].index = util.clamp(self.index - 4, 1, 5)
-            self.lists[2].active = self.index > 4
+            self.lists[2].index = self.index
             self.lists[2].num_above_selected = 0
-            for i = 1, 5 do
-                self.lists[2].entries[i] = params:get(self.params[i + 4])
+            for i = 1, 9 do
+                self.lists[2].entries[i] = params:get(self.params[i])
             end
             self.lists[2].text_align = "right"
             self.env_graph:edit_adsr(params:get(self.params[1]), params:get(self.params[2]),
             params:get(self.params[3]), params:get(self.params[4]))
             self.env_graph:redraw()
-            local adsr = {"A", "D", "S", "R"}
-            for i = 1,4 do
-                if self.index == i then screen.level(15) else screen.level(3) end
-                screen.move(4, 27 + 11 * (i - 1))
-                screen.text(adsr[i] .. " " .. params:string(self.params[i]))
-            end
-            screen.fill()
         end),
         Tab.new({"lfreq", "lfade", "lfo_am", "lfo_pm", "lfo_hfm", "lfo_lfm"},
         {
@@ -144,28 +128,21 @@ function init()
         end),
         Tab.new({"patk", "pdec", "psus", "prel", "pamt", "pcurve"},
         {
-            UI.List.new(70, 34, 1, {"env > pitch", "curve"}),
-            UI.List.new(120, 34)
+            UI.ScrollingList.new(70, 34, 1, {"atk", "dec", "sus", "rel", "env > pit", "curve"}),
+            UI.ScrollingList.new(120, 34)
         },
         function(self)
-            self.lists[1].index = util.clamp(self.index - 4, 1, 2)
-            self.lists[1].active = self.index > 4
-            self.lists[2].index = util.clamp(self.index - 4, 1, 2)
-            for i = 1, 2 do
-                self.lists[2].entries[i] = params:get(self.params[i + 4])
+            self.lists[1].index = self.index
+            self.lists[1].num_above_selected = 0
+            self.lists[2].index = self.index
+            for i = 1, 6 do
+                self.lists[2].entries[i] = params:get(self.params[i])
             end
-            self.lists[2].active = self.index > 4
+            self.lists[2].num_above_selected = 0
             self.lists[2].text_align = "right"
             self.env_graph:edit_adsr(params:get(self.params[1]), params:get(self.params[2]),
             params:get(self.params[3]), params:get(self.params[4]))
             self.env_graph:redraw()
-            local adsr = {"A", "D", "S", "R"}
-            for i = 1,4 do
-                if self.index == i then screen.level(15) else screen.level(3) end
-                screen.move(4, 27 + 11 * (i - 1))
-                screen.text(adsr[i] .. " " .. params:string(self.params[i]))
-            end
-            screen.fill()
         end)
     })
     MiscPage.tabs[2].env_graph = Envgraph.new_adsr(0, 20, nil, nil,
