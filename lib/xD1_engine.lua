@@ -355,12 +355,12 @@ function Engine_xD1:params(bool)
     local mididevice_list = {"none"}
     local midi_channels = {"all"}
     for i = 1, 16 do
-        tab.insert(midi_channels, i)
+        table.insert(midi_channels, i)
     end
     for _,dev in pairs(midi.devices) do
         if dev.port ~= nil then
             local name = string.lower(dev.name)
-            tab.insert(mididevice_list,name)
+            table.insert(mididevice_list,name)
             print("adding " .. name .. " to port " .. dev.port)
             mididevice[name] = {
                 name = name,

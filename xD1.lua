@@ -6,7 +6,7 @@
 -- @alanza
 -- v0.1
 
-local xD1 = include("lib/xD1_engine.lua")
+local xD1 = include("lib/xD1_engine")
 UI = require("ui")
 Filtergraph = require("filtergraph")
 Envgraph = require("envgraph")
@@ -15,7 +15,7 @@ Graph = require("graph")
 engine.name = "xD1"
 
 function init()
-    xD1.init(true)
+    xD1:params(true)
     Pages = UI.Pages.new(3, 3)
 
     -- pages
@@ -187,7 +187,7 @@ function xD1.param_changed_callback(id)
     end
     local tab = page.tabs[page.ui.index]
     local found = false
-    for _,v in pair(tab.params) do
+    for _,v in pairs(tab.params) do
         if v == id then
             found = true
             break
@@ -198,7 +198,7 @@ function xD1.param_changed_callback(id)
             text = params:lookup_param(id).name .. ": " .. params:get(id),
             redraw = function(self)
                 screen.level(0)
-                screen.rect(8, 0, 128 - 16, 6, 0)
+                screen.rect(8, 0, 128 - 16, 6)
                 screen.move(64, 6)
                 screen.level(8)
                 screen.text_center(self.text)
@@ -318,5 +318,4 @@ function key(n, z)
     end
     Popup = nil
     redraw()
-end
 end
