@@ -56,7 +56,7 @@ function init()
     {
         Tab.new({"fatk", "fdec", "fsus", "frel", "hirat", "hires", "lorat", "lores", "hfamt", "lfamt", "fcurve"},
         {
-            UI.ScrollingList.new(70, 24, 1, {"atk", "dec", "sus", "rel", "high", "res", "low","res", "env > hi", "env > low", "curve"}),
+            UI.ScrollingList.new(70, 24, 1, {"atk", "dec", "sus", "rel", "high", "res", "low","res", "e>hi", "e>low", "curve"}),
             UI.ScrollingList.new(120, 24)
         },
         function(self)
@@ -74,7 +74,7 @@ function init()
         end),
         Tab.new({"lfreq", "lfade", "lfo_am", "lfo_pm", "lfo_hfm", "lfo_lfm"},
         {
-            UI.ScrollingList.new(70, 24, 1, {"freq", "fade", "lfo > amp", "lfo > pitch", "lfo > hi", "lfo > low"}),
+            UI.ScrollingList.new(70, 24, 1, {"freq", "fade", "l>amp", "l>pit", "l>hi", "l>low"}),
             UI.ScrollingList.new(120, 24)
         },
         function(self)
@@ -129,7 +129,7 @@ function init()
         end),
         Tab.new({"patk", "pdec", "psus", "prel", "pamt", "pcurve"},
         {
-            UI.ScrollingList.new(70, 24, 1, {"atk", "dec", "sus", "rel", "env > pit", "curve"}),
+            UI.ScrollingList.new(70, 24, 1, {"atk", "dec", "sus", "rel", "e>pit", "curve"}),
             UI.ScrollingList.new(120, 24)
         },
         function(self)
