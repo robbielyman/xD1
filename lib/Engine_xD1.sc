@@ -280,7 +280,7 @@ Engine_xD1 : CroneEngine{
           xVoices.at(note).set(\gate,0);
         });
       });
-    fnNoteOn.msg([1], msg[2], msg[3]);
+    fnNoteOn.(msg[1], msg[2], msg[3]);
     });
 
     this.addCommand("note_off", "i", { arg msg;
