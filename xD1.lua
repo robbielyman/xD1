@@ -8,10 +8,9 @@
 
 xD1 = include("lib/xD1_engine")
 UI = require("ui")
-Filtergraph = require("filtergraph")
 Envgraph = require("envgraph")
 Graph = require("graph")
-Reflection = include("lib/reflection")
+-- Reflection = include("lib/reflection")
 
 engine.name = "xD1"
 
@@ -155,7 +154,7 @@ function init()
     1, params:get("pcurve"))
     MiscPage.tabs[2].env_graph:set_position_and_size(4, 22, 56, 38)
     params:bang()
-    Narcissus = Reflection.new()
+--[[    Narcissus = Reflection.new()
     Narcissus.process = grid_note
     -- grid
     Grid = grid.connect()
@@ -169,6 +168,7 @@ function init()
         grid_redraw()
     end
     Grid_redraw_metro:start(1/15)
+    ]]--
     redraw()
 end
 
@@ -317,6 +317,8 @@ function key(n, z)
     redraw()
 end
 
+--[[
+-- not working?
 -- Grid
 function grid_key(x, y, z)
     if x == 1 then
@@ -377,3 +379,4 @@ function grid_redraw()
     end
     Grid:refresh()
 end
+]] --
