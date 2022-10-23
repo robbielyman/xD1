@@ -30,7 +30,7 @@ Engine_xD1 : CroneEngine{
       "odec1"->0.3, "odec2"->0.3, "odec3"->0.3, "odec4"->0.3, "odec5"->0.3, "odec6"->0.3, "fdec"->0.3, "pdec"->0.3,
       "osus1"->0.7, "osus2"->0.7, "osus3"->0.7, "osus4"->0.7, "osus5"->0.7, "osus6"->0.7, "fsus"->0.7, "psus"->0.7,
       "orel1"->0.2, "orel2"->0.2, "orel3"->0.2, "orel4"->0.2, "orel5"->0.2, "orel6"->0.2, "frel"->0.2, "prel"->0.2,
-      "oamt1"->1, "oamt2"->1, "oamt3"->1, "oamt4"->1, "oamt5"->1, "oamt6"->1, "hfamt"->0, "lfamt"->1, "pamt"->0,
+      "hfamt"->0, "lfamt"->1, "pamt"->0,
       "ocurve"->(-1.0), "fcurve"->(-1.0), "pcurve"->0,
       "lfreq"->1, "lfade"->0, "lfo_am"->0, "lfo_pm"->0, "lfo_hfm"->0, "lfo_lfm"->0, "feedback"->0
       ]);
@@ -49,20 +49,20 @@ Engine_xD1 : CroneEngine{
         odec1=0.3, odec2=0.3, odec3=0.3, odec4=0.3, odec5=0.3, odec6=0.3, fdec=0.3, pdec=0.3,
         osus1=0.7, osus2=0.7, osus3=0.7, osus4=0.7, osus5=0.7, osus6=0.7, fsus=0.7, psus=0.7,
         orel1=0.2, orel2=0.2, orel3=0.2, orel4=0.2, orel5=0.2, orel6=0.2, frel=0.2, prel=0.2,
-        oamt1=1, oamt2=1, oamt3=1, oamt4=1, oamt5=1, oamt6=1, hfamt=0, lfamt=1, pamt=0,
+        hfamt=0, lfamt=1, pamt=0,
         ocurve=(-1.0), fcurve=(-1.0), pcurve=0,
         lfreq=1, lfade=0, lfo_am=0, lfo_pm=0, lfo_hfm=0, lfo_lfm=0, feedback=0;
 
         var maxrel = ArrayMax.kr([orel1, orel2, orel3, orel4, orel5, orel6])[0];
-        var menv = Env.asr(0, 1, maxrel + 1).kr(2, gate);
+        var menv = Env.asr(0, 1, maxrel).kr(2, gate);
         var fenv = Env.adsr(fatk, fdec, fsus, frel, 1, fcurve).kr(0, gate);
         var penv = Env.adsr(patk, pdec, psus, prel, pamt, pcurve).kr(0, gate);
-        var oenv1 = Env.adsr(oatk1, odec1, osus1, orel1, oamt1, ocurve).kr(0, gate);
-        var oenv2 = Env.adsr(oatk2, odec2, osus2, orel2, oamt2, ocurve).kr(0, gate);
-        var oenv3 = Env.adsr(oatk3, odec3, osus3, orel3, oamt3, ocurve).kr(0, gate);
-        var oenv4 = Env.adsr(oatk4, odec4, osus4, orel4, oamt4, ocurve).kr(0, gate);
-        var oenv5 = Env.adsr(oatk5, odec5, osus5, orel5, oamt5, ocurve).kr(0, gate);
-        var oenv6 = Env.adsr(oatk6, odec6, osus6, orel6, oamt6, ocurve).kr(0, gate);
+        var oenv1 = Env.adsr(oatk1, odec1, osus1, orel1, 1, ocurve).kr(0, gate);
+        var oenv2 = Env.adsr(oatk2, odec2, osus2, orel2, 1, ocurve).kr(0, gate);
+        var oenv3 = Env.adsr(oatk3, odec3, osus3, orel3, 1, ocurve).kr(0, gate);
+        var oenv4 = Env.adsr(oatk4, odec4, osus4, orel4, 1, ocurve).kr(0, gate);
+        var oenv5 = Env.adsr(oatk5, odec5, osus5, orel5, 1, ocurve).kr(0, gate);
+        var oenv6 = Env.adsr(oatk6, odec6, osus6, orel6, 1, ocurve).kr(0, gate);
         var lfo = LFTri.kr(lfreq, mul:Env.asr(lfade, 1, 10).kr(0, gate));
         var alfo = lfo.madd(0.05, 1.0) * lfo_am;
         var pitch = (note + (1.2 * lfo_pm * lfo) + (1.2 * penv)).midicps;
@@ -79,7 +79,7 @@ Engine_xD1 : CroneEngine{
         var snd = FM7.arAlgo(i, ctls, feedback);
         snd = SVF.ar(snd, hifreq, hires, lowpass:0, highpass:1);
         snd = SVF.ar(snd, lofreq, lores);
-        Out.ar(context.out_b, (snd * amp).dup);
+        Out.ar(context.out_b, (snd * amp * menv).dup);
       }).add;
     });
 
@@ -119,7 +119,7 @@ Engine_xD1 : CroneEngine{
       });
 
       xVoices.put(note,
-        Synth.new("xD1_0", [
+        Synth.new(def, [
           \note, note,
           \amp, amp*xParameters.at("amp"),
           \gate, 1,
@@ -175,12 +175,6 @@ Engine_xD1 : CroneEngine{
           \orel6, xParameters.at("orel6"),
           \frel, xParameters.at("frel"),
           \prel, xParameters.at("prel"),
-          \oamt1, xParameters.at("omat1"),
-          \oamt2, xParameters.at("omat2"),
-          \oamt3, xParameters.at("omat3"),
-          \oamt4, xParameters.at("omat4"),
-          \oamt5, xParameters.at("omat5"),
-          \oamt6, xParameters.at("omat6"),
           \hfamt, xParameters.at("hfamt"),
           \lfamt, xParameters.at("lfamt"),
           \pamt, xParameters.at("pamt"),
