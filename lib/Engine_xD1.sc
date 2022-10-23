@@ -111,10 +111,15 @@ Engine_xD1 : CroneEngine{
 
     fnNoteOnPoly = {
       arg note, amp, duration;
-      var synthdef = "xD1_" ++ xParameters.at("alg").asInteger;
+      var def = "xD1_0";
+      32.do({ arg i;
+        if (xParameters.at("alg")==i, {
+          def = "xD1_" ++i.asString;
+        });
+      });
 
       xVoices.put(note,
-        Synth.new(synthdef.asString, [
+        Synth.new(def, [
           \out, context.out_b,
           \note, note,
           \amp, amp*xParameters.at("amp"),

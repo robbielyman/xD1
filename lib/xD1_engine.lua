@@ -10,7 +10,7 @@ function Engine_xD1:params(bool)
         type    = "control",
         id      = "xd1_amp",
         name    = "amp",
-        controlspec = controlspec.new(0, 1, "lin", 0, 1, ""),
+        controlspec = controlspec.new(0, 1, "lin", 0, 0.5, ""),
         action  = function(x)
             engine.set("amp", x)
             self.param_changed_callback("xd1_amp")
@@ -22,6 +22,7 @@ function Engine_xD1:params(bool)
         name    = "algorithm",
         min     = 0,
         max     = 31,
+        default = 0,
         action  = function(x)
             engine.set("alg", x)
             self.param_changed_callback("alg")
@@ -86,7 +87,7 @@ function Engine_xD1:params(bool)
         type    = "control",
         id      = "patk",
         name    = "attack",
-        controlspec = controlspec.new(0.01, 10, "lin", 0, 0.05, ""),
+        controlspec = controlspec.new(0.01, 10, "lin", 0, 0.1),
         action  = function(x)
             engine.set("patk", x)
             self.param_changed_callback("patk")
@@ -96,7 +97,7 @@ function Engine_xD1:params(bool)
         type    = "control",
         id      = "pdec",
         name    = "decay",
-        controlspec = controlspec.new(0, 2, "lin", 0, 0.1, ""),
+        controlspec = controlspec.new(0, 2, "lin", 0, 0.3),
         action  = function(x)
             engine.set("pdec", x)
             self.param_changed_callback("pdec")
@@ -106,7 +107,7 @@ function Engine_xD1:params(bool)
         type    = "control",
         id      = "psus",
         name    = "sustain",
-        controlspec = controlspec.new(0, 1, "lin", 0, 0.7, ""),
+        controlspec = controlspec.new(0, 1, "lin", 0, 0.7),
         action = function(x)
             engine.set("psus", x)
             self.param_changed_callback("psus")
@@ -116,7 +117,7 @@ function Engine_xD1:params(bool)
         type    = "control",
         id      = "prel",
         name    = "release",
-        controlspec = controlspec.new(0.01, 10, "lin", 0, 0.3, ""),
+        controlspec = controlspec.new(0.01, 10, "lin", 0, 0.2),
         action  = function(x)
             engine.set("prel", x)
             self.param_changed_callback("prel")
@@ -126,7 +127,7 @@ function Engine_xD1:params(bool)
         type    = "control",
         id      = "pcurve",
         name    = "curve",
-        controlspec = controlspec.new(-1, 1, "lin", 0, -1),
+        controlspec = controlspec.new(-4, 4, "lin", 0, -1),
         action  = function(x)
             engine.set("pcurve", x)
             self.param_changed_callback("pcurve")
@@ -136,7 +137,7 @@ function Engine_xD1:params(bool)
         type    = "control",
         id      = "pamt",
         name    = "env > pitch",
-        controlspec = controlspec.new(0, 1, "lin", 0, 0, ""),
+        controlspec = controlspec.new(0, 1, "lin", 0, 0),
         action  = function(x)
             engine.set("pamt", x)
             self.param_changed_callback("pamt")
@@ -198,7 +199,7 @@ function Engine_xD1:params(bool)
         type    = "control",
         id      = "fatk",
         name    = "attack",
-        controlspec = controlspec.new(0.01, 10, "lin", 0, 0.05),
+        controlspec = controlspec.new(0.01, 10, "lin", 0, 0.1),
         action  = function(x)
             engine.set("fatk", x)
             self.param_changed_callback("fatk")
@@ -208,7 +209,7 @@ function Engine_xD1:params(bool)
         type    = "control",
         id      = "fdec",
         name    = "decay",
-        controlspec = controlspec.new(0, 2, "lin", 0, 0.1),
+        controlspec = controlspec.new(0, 2, "lin", 0, 0.3),
         action  = function(x)
             engine.set("fdec", x)
             self.param_changed_callback("fdec")
@@ -228,7 +229,7 @@ function Engine_xD1:params(bool)
         type    = "control",
         id      = "frel",
         name    = "release",
-        controlspec = controlspec.new(0.01, 10, "lin", 0, 1),
+        controlspec = controlspec.new(0.01, 10, "lin", 0, 0.2),
         action  = function(x)
             engine.set("frel", x)
             self.param_changed_callback("frel")
@@ -238,7 +239,7 @@ function Engine_xD1:params(bool)
         type    = "control",
         id      = "fcurve",
         name    = "curve",
-        controlspec = controlspec.new(-1, 1, "lin", 0, -1),
+        controlspec = controlspec.new(-4, 4, "lin", 0, -1),
         action  = function(x)
             engine.set("fcurve", x)
             self.param_changed_callback("fcurve")
@@ -289,7 +290,7 @@ function Engine_xD1:params(bool)
         type    = "control",
         id      = "ocurve",
         name    = "op env curve",
-        controlspec = controlspec.new(-1, 1, "lin", 0, -1),
+        controlspec = controlspec.new(-4, 4, "lin", 0, -1),
         action  = function(x)
             engine.set("ocurve", x)
             self.param_changed_callback("ocurve")
@@ -335,7 +336,7 @@ function Engine_xD1:params(bool)
             type    = "control",
             id      = "oatk"..i,
             name    = "attack",
-            controlspec = controlspec.new(0.01, 10, "lin", 0, 0.05),
+            controlspec = controlspec.new(0.01, 10, "lin", 0, 0.1),
             action  = function(x)
                 engine.set("oatk"..i, x)
                 self.param_changed_callback("oatk"..i)
@@ -345,7 +346,7 @@ function Engine_xD1:params(bool)
             type    = "control",
             id      = "odec"..i,
             name    = "decay",
-            controlspec = controlspec.new(0, 2, "lin", 0, 0),
+            controlspec = controlspec.new(0, 2, "lin", 0, 0.3),
             action  = function(x)
                 engine.set("odec"..i, x)
                 self.param_changed_callback("odec"..i)
@@ -365,7 +366,7 @@ function Engine_xD1:params(bool)
             type    = "control",
             id      = "orel" ..i,
             name    = "release",
-            controlspec = controlspec.new(0.01, 10, "lin", 0, 0.3),
+            controlspec = controlspec.new(0.01, 10, "lin", 0, 0.2),
             action  = function(x)
                 engine.set("orel"..i, x)
                 self.param_changed_callback("orel"..i)

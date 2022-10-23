@@ -25,7 +25,11 @@ function init()
         self.lists[1].num_above_selected = 0
         self.lists[2].index = self.index
         for i = 1,8 do
-            self.lists[2].entries[i] = string.format("%.2f", params:get(self.params[i]))
+            if i ~= 5 and i ~= 6 then
+                self.lists[2].entries[i] = string.format("%.2f", params:get(self.params[i]))
+            else
+                self.lists[2].entries[i] = params:get(self.params[i])
+            end
         end
         self.lists[2].num_above_selected = 0
         self.lists[2].text_align = "right"
@@ -113,7 +117,7 @@ function init()
     {
         Tab.new({"alg", "max_polyphony", "feedback"},
         {
-            UI.List.new(70, 34, 1, {"algorithm", "polyphony", "feedback"}),
+            UI.List.new(70, 34, 1, {"alg", "poly", "fdbk"}),
             UI.List.new(120, 34)
         },
         function(self)
