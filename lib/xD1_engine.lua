@@ -152,7 +152,7 @@ function Engine_xD1:params(bool)
         end
     }
     -- highpass
-    params:add_group("filters", "filters", 11)
+    params:add_group("filters", "filters", 13)
     params:add{
         type    = "control",
         id      = "hirat",
@@ -165,12 +165,32 @@ function Engine_xD1:params(bool)
     }
     params:add{
         type    = "control",
+        id      = "hires",
+        name    = "res",
+        controlspec = controlspec.new(0, 1, "lin", 0, 0),
+        action  = function(x)
+            engine.set("hires", x)
+            self.param_changed_callback("hires")
+        end
+    }
+    params:add{
+        type    = "control",
         id      = "lorat",
         name    = "lowpass",
         controlspec = controlspec.new(0.125, 8, "exp", 0, 8.0),
         action  = function(x)
             engine.set("lorat", x)
             self.param_changed_callback("lorat")
+        end
+    }
+    params:add{
+        type    = "control",
+        id      = "lores",
+        name    = "res",
+        controlspec = controlspec.new(0, 1, "lin", 0, 0),
+        action  = function(x)
+            engine.set("lores", x)
+            self.param_changed_callback("lores")
         end
     }
     params:add{

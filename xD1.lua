@@ -11,6 +11,7 @@ UI = require("ui")
 Filtergraph = require("filtergraph")
 Envgraph = require("envgraph")
 Graph = require("graph")
+Reflection = include("lib/reflection")
 
 engine.name = "xD1"
 
@@ -23,8 +24,8 @@ function init()
         self.lists[1].index = self.index
         self.lists[1].num_above_selected = 0
         self.lists[2].index = self.index
-        for j = 1,8 do
-            self.lists[2].entries[j] = params:get(self.params[j + 4])
+        for i = 1,8 do
+            self.lists[2].entries[i] = string.format("%.2f", params:get(self.params[i]))
         end
         self.lists[2].num_above_selected = 0
         self.lists[2].text_align = "right"
@@ -53,9 +54,9 @@ function init()
     OpPage = Page.new(titles, tabs)
     FiltPage = Page.new({"FILTER", "LFO"},
     {
-        Tab.new({"fatk", "fdec", "fsus", "frel", "hirat", "lorat", "hfamt", "lfamt", "fcurve"},
+        Tab.new({"fatk", "fdec", "fsus", "frel", "hirat", "hires", "lorat", "lores", "hfamt", "lfamt", "fcurve"},
         {
-            UI.ScrollingList.new(70, 24, 1, {"atk", "dec", "sus", "rel", "high", "low", "env > hi", "env > low", "curve"}),
+            UI.ScrollingList.new(70, 24, 1, {"atk", "dec", "sus", "rel", "high", "res", "low","res", "env > hi", "env > low", "curve"}),
             UI.ScrollingList.new(120, 24)
         },
         function(self)
@@ -63,8 +64,8 @@ function init()
             self.lists[1].num_above_selected = 0
             self.lists[2].index = self.index
             self.lists[2].num_above_selected = 0
-            for i = 1, 9 do
-                self.lists[2].entries[i] = params:get(self.params[i])
+            for i = 1, 11 do
+                self.lists[2].entries[i] = string.format("%.2f", params:get(self.params[i]))
             end
             self.lists[2].text_align = "right"
             self.env_graph:edit_adsr(params:get(self.params[1]), params:get(self.params[2]),
@@ -82,7 +83,7 @@ function init()
             self.lists[2].index = self.index
             self.lists[2].num_above_selected = 0
             for i = 1, 6 do
-                self.lists[2].entries[i] = params:get(self.params[i])
+                self.lists[2].entries[i] = string.format("%.2f", params:get(self.params[i]))
             end
             self.lists[2].text_align = "right"
             self.lfo_graph:update_functions()
@@ -128,15 +129,15 @@ function init()
         end),
         Tab.new({"patk", "pdec", "psus", "prel", "pamt", "pcurve"},
         {
-            UI.ScrollingList.new(70, 34, 1, {"atk", "dec", "sus", "rel", "env > pit", "curve"}),
-            UI.ScrollingList.new(120, 34)
+            UI.ScrollingList.new(70, 24, 1, {"atk", "dec", "sus", "rel", "env > pit", "curve"}),
+            UI.ScrollingList.new(120, 24)
         },
         function(self)
             self.lists[1].index = self.index
             self.lists[1].num_above_selected = 0
             self.lists[2].index = self.index
             for i = 1, 6 do
-                self.lists[2].entries[i] = params:get(self.params[i])
+                self.lists[2].entries[i] = string.format("%.2f", params:get(self.params[i]))
             end
             self.lists[2].num_above_selected = 0
             self.lists[2].text_align = "right"
@@ -150,6 +151,20 @@ function init()
     1, params:get("pcurve"))
     MiscPage.tabs[2].env_graph:set_position_and_size(4, 22, 56, 38)
     params:bang()
+    Narcissus = Reflection.new()
+    Narcissus.process = grid_note
+    -- grid
+    Grid = grid.connect()
+    Grid.key = grid_key
+    Presses = {}
+    for x = 1, 16 do
+        Presses[x] = {}
+    end
+    Grid_redraw_metro = metro.init()
+    Grid_redraw_metro.event = function()
+        grid_redraw()
+    end
+    Grid_redraw_metro:start(1/15)
     redraw()
 end
 
@@ -176,6 +191,7 @@ function xD1.param_changed_callback(id)
             redraw = function(self)
                 screen.level(0)
                 screen.rect(8, 0, 128 - 16, 6)
+                screen.fill()
                 screen.move(64, 6)
                 screen.level(8)
                 screen.text_center(self.text)
@@ -295,4 +311,65 @@ function key(n, z)
     end
     Popup = nil
     redraw()
+end
+
+-- Grid
+function grid_key(x, y, z)
+    if x == 1 then
+        if z == 1 then
+            if y == 1 then
+                Narcissus:set_rec(Narcissus.rec == 0 and 1 or 0)
+                if Narcissus.rec == 1 and Narcissus.endpoint == 0 then
+                    Narcissus:start()
+                end
+            elseif y == 2 then
+                if Narcissus.play == 0 then
+                    if Narcissus.endpoint == 0 then
+                        Narcissus:set_rec(1)
+                        Narcissus:start()
+                    else
+                        Narcissus:start()
+                    end
+                else
+                    Narcissus:stop()
+                end
+            elseif y == 3 then
+                Narcissus:set_loop(Narcissus.loop == 0 and 1 or 0)
+            end
+        end
+    else
+        local event = {
+            x = x,
+            y = y,
+            z = z
+        }
+        Narcissus:watch(event)
+        grid_note(event)
+    end
+    Presses[x][y] = z
+end
+
+function grid_note(event)
+    local note = ((10 - event.y) * 5) + event.x + 30
+    if event.z == 1 then
+        xD1.note_on(note, 1)
+    else
+        xD1.note_off(note)
+    end
+    Presses[event.x][event.y] = event.z
+end
+
+function grid_redraw()
+    Grid:all(0)
+    Grid:led(1,1,Narcissus.rec==0 and 0 or 10)
+    Grid:led(1,2,Narcissus.play==0 and 0 or 10)
+    Grid:led(1,3,Narcissus.loop==0 and 0 or 10)
+    for i = 1, 16 do
+        for j = 1,8 do
+            if Presses[i][j] == 1 then
+                Grid:led(i,j,15)
+            end
+        end
+    end
+    Grid:refresh()
 end
