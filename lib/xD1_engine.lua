@@ -328,7 +328,7 @@ function Engine_xD1:params(bool)
             name    = "index",
             controlspec = controlspec.new(0, 4, "lin", 0, 1),
             action  = function(x)
-                engine.set("index"..i, x)
+                engine.set("oamp"..i, x)
                 self.param_changed_callback("oamp"..i)
             end
         }
