@@ -3,7 +3,8 @@
 -- DX7-inspired FM polysynth 
 -- with filters
 --
--- @alanza
+-- llllllll.co/t/xd1-is-an-fm-synth
+-- @alanza 
 -- v0.1
 
 xD1 = include("lib/xD1_engine")

@@ -12,7 +12,7 @@ function Engine_xD1:params(bool)
         name    = "amp",
         controlspec = controlspec.new(0, 1, "lin", 0, 0.5, ""),
         action  = function(x)
-            engine.set("amp", x)
+            engine.set("amp", x/2)
             self.param_changed_callback("xd1_amp")
         end
     }
