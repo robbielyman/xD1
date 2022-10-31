@@ -328,6 +328,12 @@ Engine_xD1 : CroneEngine{
       });
     });
 
+    this.addCommand("killall", {
+      Server.default.nextNodeID.do({ arg i; 
+        Node.basicNew(Server.default, i).set(\gate, 0);
+      });
+    });
+
     this.addCommand("set", "sf", { arg msg;
       var key = msg[1].asString;
       var val = msg[2];

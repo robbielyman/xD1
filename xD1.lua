@@ -340,6 +340,8 @@ function grid_key(x, y, z)
                 end
             elseif y == 3 then
                 Narcissus:set_loop(Narcissus.loop == 0 and 1 or 0)
+            elseif y == 8 then
+                xD1.killall()
             end
         end
     else

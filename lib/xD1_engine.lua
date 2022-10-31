@@ -454,6 +454,10 @@ function Engine_xD1:params(bool)
     end
 end
 
+function Engine_xD1.killall()
+    engine.killall()
+end
+
 function Engine_xD1.param_changed_callback(_) end
 
 function Engine_xD1.note_on(note, vel, time)
