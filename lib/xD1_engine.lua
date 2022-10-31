@@ -17,24 +17,20 @@ function Engine_xD1:params(bool)
         end
     }
     params:add{
-        type    = "number",
+        type    = "control",
         id      = "alg",
         name    = "algorithm",
-        min     = 0,
-        max     = 31,
-        default = 0,
+        controlspec = controlspec.new(0, 31, "lin", 1, 0),
         action  = function(x)
             engine.set("alg", x)
             self.param_changed_callback("alg")
         end
     }
     params:add{
-        type    = "number",
+        type    = "control",
         id      = "max_polyphony",
         name    = "max polyphony",
-        min     = 1,
-        max     = 20,
-        default = 20,
+        controlspec = controlspec.new(1, 20, "lin", 1, 20),
         action  = function(x)
             engine.set_polyphony(x)
             self.param_changed_callback("max_polyphony")
@@ -299,24 +295,20 @@ function Engine_xD1:params(bool)
     for i = 1, 6 do
         params:add_group("operator_"..i, "operator " .. i, 7)
         params:add{
-            type    = "number",
+            type    = "control",
             id      = "num" .. i,
             name    = "numerator ",
-            min     = 1,
-            max     = 30,
-            default = 1,
+            controlspec = controlspec.new(1, 30, "lin", 1, 1),
             action  = function(x)
                 engine.set("num" .. i, x)
                 self.param_changed_callback("num" .. i)
             end
         }
         params:add{
-            type    = "number",
+            type    = "control",
             id      = "denom" .. i,
             name    = "denominator ",
-            min     = 1,
-            max     = 30,
-            default = 1,
+            controlspec = controlspec.new(1, 30, "lin", 1, 1),
             action  = function(x)
                 engine.set("denom" .. i, x)
                 self.param_changed_callback("denom" .. i)
