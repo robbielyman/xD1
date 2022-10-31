@@ -11,7 +11,7 @@ xD1 = include("lib/xD1_engine")
 UI = require("ui")
 Envgraph = require("envgraph")
 Graph = require("graph")
--- Reflection = include("lib/reflection")
+Reflection = include("lib/reflection")
 
 engine.name = "xD1"
 
@@ -155,7 +155,7 @@ function init()
     1, params:get("pcurve"))
     MiscPage.tabs[2].env_graph:set_position_and_size(4, 22, 56, 38)
     params:bang()
---[[    Narcissus = Reflection.new()
+    Narcissus = Reflection.new()
     Narcissus.process = grid_note
     -- grid
     Grid = grid.connect()
@@ -163,13 +163,13 @@ function init()
     Presses = {}
     for x = 1, 16 do
         Presses[x] = {}
+        for y = 1, 8 do
+            Presses[x][y] = 0
+        end
     end
     Grid_redraw_metro = metro.init()
-    Grid_redraw_metro.event = function()
-        grid_redraw()
-    end
+    Grid_redraw_metro.event = grid_redraw
     Grid_redraw_metro:start(1/15)
-    ]]--
     redraw()
 end
 
@@ -318,8 +318,6 @@ function key(n, z)
     redraw()
 end
 
---[[
--- not working?
 -- Grid
 function grid_key(x, y, z)
     if x == 1 then
@@ -356,10 +354,35 @@ function grid_key(x, y, z)
     Presses[x][y] = z
 end
 
+function xD1.note_on_callback(note,amp,_)
+    local event = {
+        x = note % 5 + 5,
+        y = (note - 40) // 5 - 1,
+        z = 1,
+        amp = amp
+    }
+    Narcissus:watch(event)
+    if event.y >= 1 and event.y <= 8 then
+        Presses[event.x][event.y] = event.z
+    end
+end
+
+function xD1.note_on_callback(note)
+    local event = {
+        x = note % 5 + 5,
+        y = (note - 40) // 5 - 1,
+        z = 0
+    }
+    Narcissus:watch(event)
+    if event.y >= 1 and event.y <= 8 then
+        Presses[event.x][event.y] = event.z
+    end
+end
+
 function grid_note(event)
-    local note = ((10 - event.y) * 5) + event.x + 30
+    local note = ((8 - event.y) * 5) + event.x + 40
     if event.z == 1 then
-        xD1.note_on(note, 1)
+        xD1.note_on(note, event.amp or 1)
     else
         xD1.note_off(note)
     end
@@ -380,4 +403,3 @@ function grid_redraw()
     end
     Grid:refresh()
 end
-]] --

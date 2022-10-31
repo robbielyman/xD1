@@ -404,8 +404,10 @@ function Engine_xD1:params(bool)
                 if d.type == "note_on" then
                     local amp = util.linexp(1, 127, 0.01, 1.2, d.vel)
                     engine.note_on(d.note, amp, 600)
+                    self.note_on_callback(d.note, amp, 600)
                 elseif d.type == "note_off" then
                     engine.note_off(d.note)
+                    self.note_off_callback(d.note)
                 elseif d.cc == 64 then
                     local val = d.val > 126 and 1 or 0
                     if params:get("pedal_mode") == 1 then
@@ -462,5 +464,8 @@ end
 function Engine_xD1.note_off(note)
     engine.note_off(note)
 end
+
+function Engine_xD1.note_on_callback(...) end
+function Engine_xD1.note_off_callback(...) end
 
 return Engine_xD1
