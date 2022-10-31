@@ -328,7 +328,7 @@ Engine_xD1 : CroneEngine{
       });
     });
 
-    this.addCommand("killall", {
+    this.addCommand("killall", "", {
       Server.default.nextNodeID.do({ arg i; 
         Node.basicNew(Server.default, i).set(\gate, 0);
       });
