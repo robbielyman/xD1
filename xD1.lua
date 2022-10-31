@@ -169,7 +169,7 @@ function init()
     end
     Grid_redraw_metro = metro.init()
     Grid_redraw_metro.event = grid_redraw
-    Grid_redraw_metro:start(1/15)
+    Grid_redraw_metro:start(1/30)
     redraw()
 end
 
