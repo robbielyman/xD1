@@ -118,6 +118,14 @@ Engine_xD1 : CroneEngine{
         });
       });
 
+      if(xVoices.at(note) != nil, {
+        if(xVoices.at(note).isRunning, {
+            xVoices.at(note).set(\gate,0);
+          }, {
+            xVoices.at(note).free;
+          });
+      });
+
       xVoices.put(note,
         Synth.new(def, [
           \note, note,

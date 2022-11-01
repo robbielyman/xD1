@@ -358,10 +358,10 @@ function grid_key(x, y, z)
     Presses[x][y] = z
 end
 
-function xD1.note_on_callback(note,amp,_)
+xD1.note_on_callback = function(note,amp,_)
     local event = {
         x = note % 5 + 5,
-        y = (note - 40) // 5 - 1,
+        y = 9 - (note - 40) // 5,
         z = 1,
         amp = amp
     }
@@ -371,10 +371,10 @@ function xD1.note_on_callback(note,amp,_)
     end
 end
 
-function xD1.note_on_callback(note)
+xD1.note_off_callback = function(note)
     local event = {
         x = note % 5 + 5,
-        y = (note - 40) // 5 - 1,
+        y = 9 - (note - 40) // 5,
         z = 0
     }
     Narcissus:watch(event)

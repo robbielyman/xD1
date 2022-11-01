@@ -113,18 +113,20 @@ function reflection:begin_playback()
             self.step = self.step + 1
             local q = math.floor(96 * self.quantize)
             if self.step % q == 1 then
-                for i = q - 1, 0, - 1 do
-                    if self.event[self.step - i] and next(self.event[self.step - i]) then
-                        for j = 1, #self.event[self.step - i] do
-                            self.process(self.event[self.step - i][j])
+                if self.endpoint ~= 0 then -- don't process on first pass
+                    for i = q - 1, 0, - 1 do
+                        if self.event[self.step - i] and next(self.event[self.step - i]) then
+                            for j = 1, #self.event[self.step - i] do
+                                self.process(self.event[self.step - i][j])
+                            end
                         end
                     end
-                end
-                if self.endpoint ~= 0 and self.step >= self.endpoint then
-                    if self.loop == 0 then
-                        self:end_playback()
-                    elseif self.loop == 1 then
-                        self.step = self.step - self.endpoint
+                    if self.step >= self.endpoint then
+                        if self.loop == 0 then
+                            self:end_playback()
+                        elseif self.loop == 1 then
+                            self.step = self.step - self.endpoint
+                        end
                     end
                 end
             end
