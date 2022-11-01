@@ -25,11 +25,7 @@ function init()
         self.lists[1].num_above_selected = 0
         self.lists[2].index = self.index
         for i = 1,8 do
-            if i ~= 5 and i ~= 6 then
-                self.lists[2].entries[i] = string.format("%.2f", params:get(self.params[i]))
-            else
-                self.lists[2].entries[i] = params:get(self.params[i])
-            end
+            self.lists[2].entries[i] = params:string(self.params[i])
         end
         self.lists[2].num_above_selected = 0
         self.lists[2].text_align = "right"
@@ -69,7 +65,7 @@ function init()
             self.lists[2].index = self.index
             self.lists[2].num_above_selected = 0
             for i = 1, 11 do
-                self.lists[2].entries[i] = string.format("%.2f", params:get(self.params[i]))
+                self.lists[2].entries[i] = params:string(self.params[i])
             end
             self.lists[2].text_align = "right"
             self.env_graph:edit_adsr(params:get(self.params[1]), params:get(self.params[2]),
@@ -87,7 +83,7 @@ function init()
             self.lists[2].index = self.index
             self.lists[2].num_above_selected = 0
             for i = 1, 6 do
-                self.lists[2].entries[i] = string.format("%.2f", params:get(self.params[i]))
+                self.lists[2].entries[i] = params:string(self.params[i])
             end
             self.lists[2].text_align = "right"
             self.lfo_graph:update_functions()
@@ -124,7 +120,7 @@ function init()
             self.lists[1].index = self.index
             self.lists[2].index = self.index
             for i = 1, 3 do
-                self.lists[2].entries[i] = params:get(self.params[i])
+                self.lists[2].entries[i] = params:string(self.params[i])
             end
             self.lists[2].text_align = "right"
             screen.level(10)
@@ -141,7 +137,7 @@ function init()
             self.lists[1].num_above_selected = 0
             self.lists[2].index = self.index
             for i = 1, 6 do
-                self.lists[2].entries[i] = string.format("%.2f", params:get(self.params[i]))
+                self.lists[2].entries[i] = params:string(self.params[i])
             end
             self.lists[2].num_above_selected = 0
             self.lists[2].text_align = "right"
@@ -192,7 +188,7 @@ function xD1.param_changed_callback(id)
     end
     if not found then
         Popup = {
-            text = params:lookup_param(id).name .. ": " .. params:get(id),
+            text = params:lookup_param(id).name .. ": " .. params:string(id),
             redraw = function(self)
                 screen.level(0)
                 screen.rect(8, 0, 128 - 16, 6)
