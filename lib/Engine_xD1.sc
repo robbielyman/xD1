@@ -26,6 +26,7 @@ Engine_xD1 : CroneEngine{
     SynthDef("ColorLimiter", { arg input;
         Out.ar(context.out_b, In.ar(input).tanh.dup);
       }).add;
+    Server.default.sync;
     endOfChain = Synth.new("ColorLimiter", [\input, outBus]);
     NodeWatcher.register(endOfChain);
 
