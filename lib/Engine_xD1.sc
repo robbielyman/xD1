@@ -63,30 +63,27 @@ Engine_xD1 : CroneEngine{
         ocurve=(-1.0), fcurve=(-1.0), pcurve=0,
         lfreq=1, lfade=0, lfo_am=0, lfo_pm=0, lfo_hfm=0, lfo_lfm=0, feedback=0;
 
-        var maxrel = ArrayMax.kr([orel1, orel2, orel3, orel4, orel5, orel6])[0];
+        var maxrel = ArrayMax.kr(orel1, orel2, orel3, orel4, orel5, orel6)[0];
         var menv = Env.asr(0, 1, maxrel).kr(2, gate);
         var fenv = Env.adsr(fatk, fdec, fsus, frel, 1, fcurve).kr(0, gate);
         var penv = Env.adsr(patk, pdec, psus, prel, pamt, pcurve).kr(0, gate);
-        var oenv1 = Env.adsr(oatk1, odec1, osus1, orel1, 1, ocurve).kr(0, gate);
-        var oenv2 = Env.adsr(oatk2, odec2, osus2, orel2, 1, ocurve).kr(0, gate);
-        var oenv3 = Env.adsr(oatk3, odec3, osus3, orel3, 1, ocurve).kr(0, gate);
-        var oenv4 = Env.adsr(oatk4, odec4, osus4, orel4, 1, ocurve).kr(0, gate);
-        var oenv5 = Env.adsr(oatk5, odec5, osus5, orel5, 1, ocurve).kr(0, gate);
-        var oenv6 = Env.adsr(oatk6, odec6, osus6, orel6, 1, ocurve).kr(0, gate);
+        var oenv = Env.adsr(
+          [oatk1, oatk2, oatk3, oatk4, oatk5, oatk6],
+          [odec1, odec2, odec3, odec4, odec5, odec6],
+          [osus1, osus2, osus3, osus4, osus5, osus6],
+          [orel1, orel2, orel3, orel4, orel5, orel6],
+        1, ocurve).kr(0, gate);
+        var oamp = [oamp1, oamp2, oamp3, oamp4, oamp5, oamp6];
+        var ratios = [num1 / denom1, num2 / denom2, num3 / denom3, num4 / denom4, num5 / denom5, num6 / denom6];
         var lfo = LFTri.kr(lfreq, mul:Env.asr(lfade, 1, 10).kr(0, gate));
         var alfo = lfo.madd(0.05, 1.0) * lfo_am;
         var pitch = (note + (1.2 * lfo_pm * lfo) + (1.2 * penv)).midicps;
-        var ctls = [
-        [pitch * num1 / denom1, 0, (oenv1 + alfo) * oamp1],
-        [pitch * num2 / denom2, 0, (oenv2 + alfo) * oamp2],
-        [pitch * num3 / denom3, 0, (oenv3 + alfo) * oamp3],
-        [pitch * num4 / denom4, 0, (oenv4 + alfo) * oamp4],
-        [pitch * num5 / denom5, 0, (oenv5 + alfo) * oamp5],
-        [pitch * num6 / denom6, 0, (oenv6 + alfo) * oamp6]
-        ];
+        var ctls = Array.fill(6, { arg i;
+          [pitch * ratios[i], 0, (oenv[i] + alfo) * oamp[i]];
+        });
         var hifreq = hirat * (note + (1.2 * lfo_hfm * lfo) + (1.2 * fenv * hfamt)).midicps;
         var lofreq = lorat * (note + (1.2 * lfo_lfm * lfo) + (1.2 * fenv * lfamt)).midicps;
-        var snd = FM7.arAlgo(i, ctls, feedback);
+        var snd = Mix.ar(FM7.arAlgo(i, ctls, feedback));
         snd = SVF.ar(snd, hifreq, hires, lowpass:0, highpass:1);
         snd = SVF.ar(snd, lofreq, lores);
         Out.ar(out, (snd * amp * menv));
@@ -98,7 +95,7 @@ Engine_xD1 : CroneEngine{
       var notesOn = false;
       var setNote = false;
       xVoices.keysValuesDo({ arg key, syn;
-        if (syn.isRunning, {
+        if (syn.isPlaying, {
           notesOn = true;
         });
       });
@@ -106,7 +103,7 @@ Engine_xD1 : CroneEngine{
         fnNoteOnPoly.(note,amp,duration);
       },{
         xVoices.keysValuesDo({ arg key, syn;
-          if (syn.isRunning,{
+          if (syn.isPlaying,{
             syn.set(\gate,0);
             if (setNote==false,{
               syn.set(\gate,1,
@@ -126,14 +123,6 @@ Engine_xD1 : CroneEngine{
         if (xParameters.at("alg")==i, {
           def = "xD1_" ++i.asString;
         });
-      });
-
-      if(xVoices.at(note) != nil, {
-        if(xVoices.at(note).isRunning, {
-            xVoices.at(note).set(\gate,0);
-          }, {
-            xVoices.at(note).free;
-          });
       });
 
       xVoices.put(note,
@@ -209,7 +198,7 @@ Engine_xD1 : CroneEngine{
           \feedback, xParameters.at("feedback")
           ]);
       );
-      NodeWatcher.register(xVoices.at(note));
+      NodeWatcher.register(xVoices.at(note), true);
       fnNoteAdd.(note);
     };
 
@@ -233,6 +222,9 @@ Engine_xD1 : CroneEngine{
 
     fnNoteOn = {
       arg note, amp, duration;
+      if (xVoices.at(note) != nil, {
+        fnNoteOff.(note);
+      });
       if (xParameters.at("monophonic") > 0, {
         fnNoteOnMono.(note, amp, duration);
       },{
@@ -242,13 +234,11 @@ Engine_xD1 : CroneEngine{
 
     fnNoteOff = {
       arg note;
-      if ((xVoices.at(note)==nil) || ((xVoices.at(note).isRunning==false) && (xVoicesOn.at(note)==nil)),{},{
-        if (xParameters.at("monophonic") > 0, {
-          fnNoteOffMono.(note);
-        },{
+      if (xParameters.at("monophonic") > 0, {
+        fnNoteOffMono.(note);
+      },{
           fnNoteOffPoly.(note);
         });
-      });
     };
 
     fnNoteOffMono = {
@@ -261,14 +251,18 @@ Engine_xD1 : CroneEngine{
       });
       if (notesOn==false,{
         xVoices.keysValuesDo({ arg note, syn;
-          if (syn.isRunning, {
-            syn.set(\gate, 0);
-          });
+          if (syn.isPlaying, {
+            syn.release();
+            xVoices.removeAt(note);
+        }, {
+            syn.release(0);
+            xVoices.removeAt(note);
+        });
         });
       },{
         xVoices.keysValuesDo({ arg note, syn;
-          if (syn.isRunning, {
-            syn.set(\gate, 0);
+          if (syn.isPlaying, {
+              syn.release();
             if (playedAnother==false, {
               syn.set(\gate, 1, \note, note);
               playedAnother = true;
@@ -286,19 +280,22 @@ Engine_xD1 : CroneEngine{
         pedalSustainNotes.put(note,1);
       },{
         if ((pedalSostenutoOn==true) && (pedalSostenutoNotes.at(note) != nil),{},{
-          xVoices.at(note).set(\gate,0);
+          if (xVoices.at(note) != nil, {
+            if (xVoices.at(note).isPlaying==true, {
+              xVoices.at(note).release();
+              xVoices.removeAt(note);
+            }, {
+              xVoices.at(note).release(0);
+              xVoices.removeAt(note);
+            });
+          });
         });
       });
     };
 
     this.addCommand("note_on", "iff", { arg msg;
       var note = msg[1];
-      if (xVoices.at(note)!=nil,{
-        if (xVoices.at(note).isRunning==true,{
-          xVoices.at(note).set(\gate,0);
-        });
-      });
-    fnNoteOn.(msg[1], msg[2], msg[3]);
+      fnNoteOn.(msg[1], msg[2], msg[3]);
     });
 
     this.addCommand("note_off", "i", { arg msg;
@@ -349,7 +346,7 @@ Engine_xD1 : CroneEngine{
 
     this.addCommand("killall", "", {
       Server.default.nextNodeID.do({ arg i; 
-        Node.basicNew(Server.default, i).set(\gate, 0);
+        Node.basicNew(Server.default, i).release(0);
       });
     });
 
@@ -361,7 +358,7 @@ Engine_xD1 : CroneEngine{
         "alg", {},
         {
           xVoices.keysValuesDo({ arg note, syn;
-            if (syn.isRunning==true,{
+            if (syn.isPlaying==true,{
               syn.set(key.asSymbol,val);
             });
           });
