@@ -86,7 +86,7 @@ Engine_xD1 : CroneEngine{
         var snd = Mix.ar(FM7.arAlgo(i, ctls, feedback));
         snd = SVF.ar(snd, hifreq, hires, lowpass:0, highpass:1);
         snd = SVF.ar(snd, lofreq, lores);
-        Out.ar(out, (snd * amp * menv));
+        Out.ar(out, (snd * amp * menv * 0.5));
       }).add;
     });
 
