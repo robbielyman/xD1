@@ -7,7 +7,7 @@
 -- @alanza 
 -- v0.2
 
-xD1 = include("lib/xD1_engine")
+local xD1 = include("lib/xD1_engine")
 UI = require("ui")
 Envgraph = require("envgraph")
 Graph = require("graph")
@@ -16,7 +16,7 @@ Reflection = include("lib/reflection")
 engine.name = "xD1"
 
 function init()
-    xD1:params(true)
+    xD1.init(true)
     Pages = UI.Pages.new(3, 3)
 
     -- pages
@@ -338,8 +338,6 @@ function grid_key(x, y, z)
                 Narcissus:set_loop(Narcissus.loop == 0 and 1 or 0)
             elseif y == 4 then
                 Narcissus:clear()
-            elseif y == 8 then
-                xD1.killall()
             end
         end
     else
@@ -367,7 +365,7 @@ xD1.note_on_callback = function(note,amp,_)
     end
 end
 
-xD1.note_off_callback = function(note)
+xD1.note_off_callback = function(note,_)
     local event = {
         x = note % 5 + 5,
         y = 9 - (note - 40) // 5,
