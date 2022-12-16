@@ -299,7 +299,7 @@ local function add_params(id)
     params:add_separator("operator_" .. i .. suffix, "operator " .. i)
     params:add{
       type    = "control",
-      id      = "num" .. i .. suffix,
+      id      = "num_" .. i .. suffix,
       name    = "numerator " .. i,
       controlspec = controlspec.new(1, 30, "lin", 1, 1),
       action  = function (x)
@@ -309,7 +309,7 @@ local function add_params(id)
     }
     params:add{
       type    = "control",
-      id      = "denom" .. i .. suffix,
+      id      = "denom_" .. i .. suffix,
       name    = "denominator " .. i,
       controlspec = controlspec.new(1, 30, "lin", 1, 1),
       action  = function (x)
@@ -319,7 +319,7 @@ local function add_params(id)
     }
     params:add{
       type    = "control",
-      id      = "oamp" .. i .. suffix,
+      id      = "oamp_" .. i .. suffix,
       name    = "index " .. i,
       controlspec = controlspec.new(0, 4, "lin", 0, 1),
       action  = function (x)
@@ -329,7 +329,7 @@ local function add_params(id)
     }
     params:add{
       type    = "control",
-      id      = "oatk" .. i .. suffix,
+      id      = "oatk_" .. i .. suffix,
       name    = "attack " .. i,
       controlspec = controlspec.new(0.01, 10, "lin", 0, 0.1),
       action  = function (x)
@@ -339,7 +339,7 @@ local function add_params(id)
     }
     params:add{
       type    = "control",
-      id      = "odec" .. i .. suffix,
+      id      = "odec_" .. i .. suffix,
       name    = "decay " .. i,
       controlspec = controlspec.new(0, 2, "lin", 0, 0.3),
       action  = function (x)
@@ -349,7 +349,7 @@ local function add_params(id)
     }
     params:add{
       type    = "control",
-      id      = "osus" .. i .. suffix,
+      id      = "osus_" .. i .. suffix,
       name    = "sustain " .. i,
       controlspec = controlspec.new(0, 1, "lin", 0, 0.7),
       action  = function (x)
@@ -359,7 +359,7 @@ local function add_params(id)
     }
     params:add{
       type    = "control",
-      id      = "orel" .. i .. suffix,
+      id      = "orel_" .. i .. suffix,
       name    = "release " .. i,
       controlspec = controlspec.new(0.01, 10, "lin", 0, 0.2),
       action  = function (x)

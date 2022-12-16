@@ -38,7 +38,7 @@ function init()
     for i = 1, 6 do
         titles[i] = tostring(i)
         tabs[i] = Tab.new(
-        { "oatk"..i, "odec"..i, "osus"..i, "orel"..i, "num"..i, "denom"..i, "oamp"..i, "ocurve"},
+        { "oatk_"..i, "odec_"..i, "osus_"..i, "orel_"..i, "num_"..i, "denom_"..i, "oamp_"..i, "ocurve"},
         {
             UI.ScrollingList.new(70, 24, 1, {"atk", "dec", "sus", "rel", "num", "denom", "index", "curve"}),
             UI.ScrollingList.new(120, 24)
