@@ -5,7 +5,7 @@
 --
 -- llllllll.co/t/xd1-is-an-fm-synth
 -- @alanza 
--- v0.2
+-- v0.4.1
 
 local xD1 = include("lib/xD1_engine")
 UI = require("ui")
