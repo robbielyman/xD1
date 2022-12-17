@@ -46,7 +46,7 @@ function init()
         ophook
         )
         local env_graph = Envgraph.new_adsr(0, 20, nil, nil,
-        params:get("oatk"..i), params:get("odec"..i), params:get("osus"..i), params:get("orel"..i),
+        params:get("oatk_"..i), params:get("odec_"..i), params:get("osus_"..i), params:get("orel_"..i),
         1, params:get("ocurve"))
         env_graph:set_position_and_size(4, 22, 56, 38)
         tabs[i].env_graph = env_graph

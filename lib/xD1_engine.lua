@@ -304,7 +304,7 @@ local function add_params(id)
       controlspec = controlspec.new(1, 30, "lin", 1, 1),
       action  = function (x)
         engine.index_set("num", i, id, x)
-        Engine_xD1.param_changed_callback("num" .. i .. suffix)
+        Engine_xD1.param_changed_callback("num_" .. i .. suffix)
       end
     }
     params:add{
@@ -314,7 +314,7 @@ local function add_params(id)
       controlspec = controlspec.new(1, 30, "lin", 1, 1),
       action  = function (x)
         engine.index_set("denom", i, id, x)
-        Engine_xD1.param_changed_callback("denom" .. i .. suffix)
+        Engine_xD1.param_changed_callback("denom_" .. i .. suffix)
       end
     }
     params:add{
@@ -324,7 +324,7 @@ local function add_params(id)
       controlspec = controlspec.new(0, 4, "lin", 0, 1),
       action  = function (x)
         engine.index_set("oamp", i, id, x)
-        Engine_xD1.param_changed_callback("oamp" .. i .. suffix)
+        Engine_xD1.param_changed_callback("oamp_" .. i .. suffix)
       end
     }
     params:add{
@@ -334,7 +334,7 @@ local function add_params(id)
       controlspec = controlspec.new(0.01, 10, "lin", 0, 0.1),
       action  = function (x)
         engine.index_set("oatk", i, id, x)
-        Engine_xD1.param_changed_callback("oatk" .. i .. suffix)
+        Engine_xD1.param_changed_callback("oatk_" .. i .. suffix)
       end
     }
     params:add{
@@ -344,7 +344,7 @@ local function add_params(id)
       controlspec = controlspec.new(0, 2, "lin", 0, 0.3),
       action  = function (x)
         engine.index_set("odec", i, id, x)
-        Engine_xD1.param_changed_callback("odec" .. i .. suffix)
+        Engine_xD1.param_changed_callback("odec_" .. i .. suffix)
       end
     }
     params:add{
@@ -354,7 +354,7 @@ local function add_params(id)
       controlspec = controlspec.new(0, 1, "lin", 0, 0.7),
       action  = function (x)
         engine.index_set("osus", i, id, x)
-        Engine_xD1.param_changed_callback("osus" .. i .. suffix)
+        Engine_xD1.param_changed_callback("osus_" .. i .. suffix)
       end
     }
     params:add{
@@ -364,7 +364,7 @@ local function add_params(id)
       controlspec = controlspec.new(0.01, 10, "lin", 0, 0.2),
       action  = function (x)
         engine.index_set("orel", i, id, x)
-        Engine_xD1.param_changed_callback("orel" .. i .. suffix)
+        Engine_xD1.param_changed_callback("orel_" .. i .. suffix)
       end
     }
   end

@@ -144,7 +144,7 @@ Engine_xD1 : CroneEngine {
     fnNoteOnPoly = {
       arg note, amp, timbre;
       var key = (note: note, timbre: timbre);
-      var def = ("xD1_" ++ (xTimbres[timbre].alg).asInt).asString;
+      var def = ("xD1_" ++ (xTimbres[timbre].alg).asInteger).asString;
 
       xVoices.put((note: note, timbre: timbre),
         Synth.before(endOfChain, def, [
